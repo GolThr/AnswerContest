@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+
+    <script type="text/javascript">
+        var data= {class:"全部"};
+        console.log("Ajax: ");
+        $.ajax({
+            url: "service/login.php", //后台请求数据
+            data: JSON.stringify(data),
+            dataType: 'json',
+            type: 'post',
+            success: function (msg) {
+                console.log("NumbersAjax:success!");
+                console.log(msg);
+            },
+            error: function (msg) {
+                alert("请求失败，请重试");
+            }
+        });
+    </script>
+
+</body>
+</html>
