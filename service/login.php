@@ -35,5 +35,3 @@ $link -> close();
 
 //response
 echo json_encode($user);
-
-
