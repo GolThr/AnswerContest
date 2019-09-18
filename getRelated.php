@@ -1,19 +1,40 @@
 <?php
-    header('Content-Type: application/json; charset=utf-8');
-    $data=[
-        [
-            'content' => "中国各族人民将继续在中国共产党领导下，在马克思列宁主义、毛泽东思想、（  ）指引下，实现中华民族伟大复兴。",
-            'A' => "科学发展观",
-            'B' => "习近平新时代中国特色社会主义思想",
-            'C' => "邓小平理论",
-            'D' => "“三个代表”重要思想"
-        ],
-        [
-            'content' => "中国坚持独立自主的对外政策，坚持互相尊重主权和领土完整、互不侵犯、互不干涉内政、平等互利、和平共处的五项原则，坚持（  ），发展同各国的外交关系和经济.文化交流，推动构建人类命运共同体。",
-            'A' => "互利共赢开放战略",
-            'B' => "和平发展道路",
-            'C' => "文化和而不同",
-            'D' => "领先世界的科技"
-        ]
-    ];
-    echo json_encode($data);
+include("dbConfig.php");
+
+class Related{
+    public $id;
+    public $content;
+    public $A;
+    public $B;
+    public $C;
+    public $D;
+}
+
+//read_post_data
+$exam_id = $_POST['exam_id'];
+
+//20191124
+$paper_id = substr($exam_id, 5, 1);
+
+//mysql
+$sql="SELECT * FROM related WHERE r_num='$paper_id'";
+$result = $link -> query($sql);
+$relatedArray = Array();
+if ($result -> num_rows > 0) {
+    // 输出每行数据
+    while($row = $result -> fetch_assoc()) {
+        $related = new Related();
+        $related -> id = $row['related_id'];
+        $related -> content = $row['content'];
+        $related -> A = $row['r_a'];
+        $related -> B = $row['r_b'];
+        $related -> C = $row['r_c'];
+        $related -> D = $row['r_d'];
+        array_push($relatedArray, $related);
+    }
+}
+$link -> close();
+
+//response
+echo json_encode($relatedArray);
+

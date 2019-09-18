@@ -1,15 +1,33 @@
 <?php
-    header('Content-Type: application/json; charset=utf-8');
-    $data=[
-        [
-            'content' => "根据宪法的重要性和地位，宪法被誉为国家的根本大法。",
-            'A' => "√",
-            'B' => "×",
-        ],
-        [
-            'content' => "受教育权既是公民的权利,也是公民的义务。",
-            'A' => "√",
-            'B' => "×",
-        ]
-    ];
-    echo json_encode($data);
+include("dbConfig.php");
+
+class Judge{
+    public $id;
+    public $content;
+    public $A = "√";
+    public $B = "×";
+}
+
+//read_post_data
+$exam_id = $_POST['exam_id'];
+
+//20191124
+$paper_id = substr($exam_id, 5, 1);
+
+//mysql
+$sql="SELECT * FROM judge WHERE j_num='$paper_id'";
+$result = $link -> query($sql);
+$judgeArray = Array();
+if ($result -> num_rows > 0) {
+    // 输出每行数据
+    while($row = $result -> fetch_assoc()) {
+        $judge = new Judge();
+        $judge -> id = $row['judge_id'];
+        $judge -> content = $row['content'];
+        array_push($judgeArray, $judge);
+    }
+}
+$link -> close();
+
+//response
+echo json_encode($judgeArray);

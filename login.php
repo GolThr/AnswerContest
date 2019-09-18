@@ -1,5 +1,5 @@
 <?php
-include("service/dbConfig.php");
+include("dbConfig.php");
 
 class User{
     public $ifsuccess = '0';

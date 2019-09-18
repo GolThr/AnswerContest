@@ -1,12 +1,39 @@
 <?php
-    header('Content-Type: application/json; charset=utf-8');
-    $data = [
-        [
-            'content' => "下列哪种说法是不正确的?",
-            'A' => "饲养的动物造成他人损害的，动物饲养人或管理人应当承担民事责任",
-            'B' => "由于受害人过错造成损害的，动物饲养人或管理人应当不承担民事责任",
-            'C' => "由于第三人的过错造成损害的，第三人应当承担民事责任",
-            'D' => "只要被动物咬伤，都要由动物主人赔偿"
-        ]
-    ];
-    echo json_encode($data);
+include("dbConfig.php");
+
+class SingleSelect{
+    public $id;
+    public $content;
+    public $A;
+    public $B;
+    public $C;
+    public $D;
+}
+
+//read_post_data
+$exam_id = $_POST['exam_id'];
+
+//20191124
+$paper_id = substr($exam_id, 5, 1);
+
+//mysql
+$sql="SELECT * FROM single_select WHERE s_num='$paper_id'";
+$result = $link -> query($sql);
+$singleSelectArray = Array();
+if ($result -> num_rows > 0) {
+    $singleSelect = new SingleSelect();
+    // 输出每行数据
+    while($row = $result -> fetch_assoc()) {
+        $singleSelect -> id = $row['single_select_id'];
+        $singleSelect -> content = $row['content'];
+        $singleSelect -> A = $row['s_a'];
+        $singleSelect -> B = $row['s_b'];
+        $singleSelect -> C = $row['s_c'];
+        $singleSelect -> D = $row['s_d'];
+    }
+    array_push($singleSelectArray, $singleSelect);
+}
+$link -> close();
+
+//response
+echo json_encode($singleSelectArray);

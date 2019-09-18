@@ -1,19 +1,40 @@
 <?php
-    header('Content-Type: application/json; charset=utf-8');
-    $data=[
-        [
-            'content' => "我国宪法规定，中华人民共和国公民对于任何国家机关和国家工作人员的违法失职行为，有向有关国家机关提出（  ）的权利。",
-            'A' => "申诉",
-            'B' => "上诉",
-            'C' => "控告",
-            'D' => "检举"
-        ],
-        [
-            'content' => "现行宪法规定，宪法的修改，由 (   )提议，并由全国人民代表大会通过。 ",
-            'A' => "全国人民代表大会主席团",
-            'B' => "全国人大常委会",
-            'C' => "全国人民代表大会的各个专门委员会",
-            'D' => "1/5 以上的全国人民代表大会代表"
-        ]
-    ];
-    echo json_encode($data);
+include("dbConfig.php");
+
+class MultiSelect{
+    public $id;
+    public $content;
+    public $A;
+    public $B;
+    public $C;
+    public $D;
+}
+
+//read_post_data
+$exam_id = $_POST['exam_id'];
+
+//20191124
+$paper_id = substr($exam_id, 5, 1);
+
+//mysql
+$sql="SELECT * FROM multi_select WHERE m_num='$paper_id'";
+$result = $link -> query($sql);
+$multiSelectArray = Array();
+if ($result -> num_rows > 0) {
+    // 输出每行数据
+    while($row = $result -> fetch_assoc()) {
+        $multiSelect = new MultiSelect();
+        $multiSelect -> id = $row['multi_select_id'];
+        $multiSelect -> content = $row['content'];
+        $multiSelect -> A = $row['m_a'];
+        $multiSelect -> B = $row['m_b'];
+        $multiSelect -> C = $row['m_c'];
+        $multiSelect -> D = $row['m_d'];
+        array_push($multiSelectArray, $multiSelect);
+    }
+}
+$link -> close();
+
+//response
+echo json_encode($multiSelectArray);
+
