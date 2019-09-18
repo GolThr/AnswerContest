@@ -1,0 +1,176 @@
+/*禁用复制*/
+* {
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/*字体导入*/
+@font-face {
+    font-family:fz;
+    src: url('./fonts/Microsoft YaHei UI Light.ttf');
+}
+
+body {
+    /*text-align: center*/
+    padding-top: 50px;
+    font-family: "Microsoft YaHei UI Light";
+    background-color: rgba(139, 126, 134, 0.18);
+}
+
+#main {
+    margin: 0 auto;
+    border: 1px solid #000;
+    width: 60%;
+    /*height: 450px;*/
+    border-radius: 11px;
+    background-color: white;
+}
+
+#main > div {
+    padding-left: 20px; /*左边距*/
+    padding-right: 20px;
+}
+
+#top {
+    background-color: rgba(12, 8, 17, 0.88);
+    color: white;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: 10px 10px 0 0;
+    height: 50px;
+}
+
+#top > p {
+    padding-left: 20px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+#top > b {
+    padding-right: 20px;
+    display: inline-block;
+    float: right;
+    font-size: 35px;
+}
+
+#problem {
+    padding-top: 20px;
+}
+
+#select {
+    color: #000000;
+}
+
+li{
+    list-style-type: upper-latin;
+    display: list-item;
+}
+
+/*单选框样式*/
+form {
+    padding-top: 10px;
+}
+form > div {
+    position: relative;
+    line-height: 30px;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+}
+
+form label {
+    position: absolute;
+    left: 25px;
+    top: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #999;
+}
+form span {
+    padding-left: 10px;
+}
+/*设置选中的input的样式*/
+/* + 是兄弟选择器,获取选中后的label元素*/
+input:checked+label {
+    background-color: #75b1ff;
+    border: 1px solid #5b9eff;
+}
+
+input:checked+label::after {
+    position: absolute;
+    content: "";
+    width: 5px;
+    height: 10px;
+    top: 3px;
+    left: 6px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg)
+}
+
+/*输入框样式*/
+input[type="text"]{
+    width: 80%;
+    border: 1px solid #ccc;
+    padding: 7px 0;
+    background: #F4F4F7;
+    border-radius: 3px;
+    padding-left:5px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+}
+input[type="text"]:focus{
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+}
+
+/*按钮样式*/
+#Button {
+    padding-top: 10px;
+    float: right;
+}
+
+button {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 16px;
+    background: #3498db;
+    padding: 12px 30px 12px 30px;
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+button:hover {
+    color: #ffffff;
+    background: #2980b9;
+    text-decoration: none;
+}
+
+#pg {
+    height: 60px;
+    padding-top: 100px;
+}
+#pg > b{
+    padding-left: 10px;
+    font-size: 22px;
+}
+
+progress {
+    width: 80%;
+}

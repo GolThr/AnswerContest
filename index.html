@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>考试登录</title>
+		<meta charset="utf-8">
+		<link href="login-style.css" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script>
+		let exam_id;
+		function Login() {
+			exam_id = document.getElementById("exam_id").value;
+			let name = document.getElementById("name").value;
+			let infos = document.getElementById("infos");
+			let submit = document.getElementById("submit");
+			let go_test = document.getElementById("go_test");
+
+			$.ajax({
+				url: "login.php",
+				type: "post",
+				dataType: "json",
+				data: {
+					"exam_id": exam_id,
+					"name": name
+				},
+				success: function (res) {
+					console.log(res);
+					if (res.ifsuccess == 1){
+						console.log("登录成功");
+						infos.style = "";
+						submit.style = "display: none";
+						go_test.style = "";
+						$("#school").html(res.school);
+						$("#region").html(res.region);
+					} else {
+						console.log("登录失败");
+						alert("信息匹配错误，请重试!");
+					}
+				}
+			})
+		}
+		function GoTest() {
+			document.cookie = "exam_id="+exam_id;
+			window.location.href = 'main.php';
+		}
+	</script>
+</head>
+<body>
+	 <!-----start-main---->
+	 <div class="main">
+		<div class="login-form">
+			<h1>考生登录</h1>
+				<form onsubmit="return false;">
+					<div id="infos" style="display: none">
+						<h6 style="margin-bottom: 10px">学校:</h6>
+						<div id="school"></div>
+						<h6 style="margin-bottom: 10px">地区:</h6>
+						<div id="region"></div>
+					</div>
+						<h6 style="margin-bottom: 10px">考试号:</h6>
+						<input type="text" class="text" id="exam_id" placeholder="请输入考试号">
+						<h6 style="margin-bottom: 10px">姓名:</h6>
+						<input type="text" id="name" placeholder="请输入姓名">
+						<div class="submit" id="submit">
+							<input type="submit" onclick="Login()" value="登录" >
+						</div>
+						<div class="submit" id="go_test" style="display: none">
+							<input type="submit" onclick="GoTest()" value="确认信息无误，进入考试">
+						</div>
+				</form>
+			</div>
+			<!--//End-login-form-->
+		</div>
+			 <!-----//end-main---->
+</body>
+</html>
