@@ -5,11 +5,6 @@ class SingleSelect{
     public $id;
     public $content;
     public $A;
-    public $B;
-    public $C;
-    public $D;
-    public $E;
-    public $F;
 }
 
 //read_post_data

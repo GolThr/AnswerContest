@@ -2,10 +2,10 @@
 <html>
 <head>
 	<title>考试登录</title>
-		<meta charset="utf-8">
-		<link href="login-style.css" rel='stylesheet' type='text/css' />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<meta charset="utf-8">
+	<link href="login-style.css" rel='stylesheet' type='text/css' />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script>
 		let exam_id;
@@ -40,38 +40,55 @@
 				}
 			})
 		}
+		// 获取cookie指定字段
+		function getCookie(name) {
+			let arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+			arr = document.cookie.match(reg);
+			if (arr)
+				return unescape(arr[2]);
+			else
+				return null;
+		}
+		function delCookie(name) {
+			let exp = new Date();
+			exp.setTime(exp.getTime() - 1);
+			let cval = getCookie(name);
+			if (cval != null)
+				document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+		}
 		function GoTest() {
 			document.cookie = "exam_id="+exam_id;
+			delCookie("clock");
 			window.location.href = 'main.php';
 		}
 	</script>
 </head>
 <body>
-	 <!-----start-main---->
-	 <div class="main">
-		<div class="login-form">
-			<h1>考生登录</h1>
-				<form onsubmit="return false;">
-					<div id="infos" style="display: none">
-						<h6 style="margin-bottom: 10px">学校:</h6>
-						<div id="school"></div>
-						<h6 style="margin-bottom: 10px">地区:</h6>
-						<div id="region"></div>
-					</div>
-						<h6 style="margin-bottom: 10px">考试号:</h6>
-						<input type="text" class="text" id="exam_id" placeholder="请输入考试号">
-						<h6 style="margin-bottom: 10px">姓名:</h6>
-						<input type="text" id="name" placeholder="请输入姓名">
-						<div class="submit" id="submit">
-							<input type="submit" onclick="Login()" value="登录" >
-						</div>
-						<div class="submit" id="go_test" style="display: none">
-							<input type="submit" onclick="GoTest()" value="确认信息无误，进入考试">
-						</div>
-				</form>
+<!-----start-main---->
+<div class="main">
+	<div class="login-form">
+		<h1>考生登录</h1>
+		<form onsubmit="return false;">
+			<div id="infos" style="display: none">
+				<h6 style="margin-bottom: 10px">学校:</h6>
+				<div id="school"></div>
+				<h6 style="margin-bottom: 10px">地区:</h6>
+				<div id="region"></div>
 			</div>
-			<!--//End-login-form-->
-		</div>
-			 <!-----//end-main---->
+			<h6 style="margin-bottom: 10px">考试号:</h6>
+			<input type="text" class="text" id="exam_id" placeholder="请输入考试号">
+			<h6 style="margin-bottom: 10px">姓名:</h6>
+			<input type="text" id="name" placeholder="请输入姓名">
+			<div class="submit" id="submit">
+				<input type="submit" onclick="Login()" value="登录" >
+			</div>
+			<div class="submit" id="go_test" style="display: none">
+				<input type="submit" onclick="GoTest()" value="确认信息无误，进入考试">
+			</div>
+		</form>
+	</div>
+	<!--//End-login-form-->
+</div>
+<!-----//end-main---->
 </body>
 </html>

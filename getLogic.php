@@ -1,8 +1,9 @@
 <?php
     header('Content-Type: application/json; charset=utf-8');
+$exam_id = $_POST['exam_id'];
     $data=[
         [
-            'content' => "这是题干",
+            'content' => "$exam_id[4]",
             'A' => "人民代表大会",
             'B' => "全国人民代表大会",
             'C' => "地方各级人民代表大会",

@@ -53,7 +53,7 @@ function ShowProblem() {
     $('#topic').html(problems[nowNum].content);
     let contents = '';
     let ans = ['A', 'B', 'C', 'D', 'E', 'F'];
-    let hint = ['提示一', '提示二', '提示三', '提示四'];
+    let hint = ['提示一', '提示二', '提示三', '提示四', '提示五'];
 
 
     for (i in problems[nowNum]) { // 循环显示选项
@@ -250,12 +250,19 @@ function Next() {
 
 function asynGetContents(){
     let URL = URLs[Number(Type)+1];
-    $.getJSON({
+    $.ajax({
         url: URL,
+        type: "post",
+        data: {
+            "exam_id": userInfo
+        },
         success: function (res) {
             console.log("asyn:");
             console.log(res);
             problems_temp = res;
+        },
+        error: function (res) {
+            console.log(res);
         }
     })
 }
