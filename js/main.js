@@ -210,6 +210,7 @@ function Next() {
 
     let sigAns = {
         "id": Number(m_num) + Number(nowNum),
+        "type": Type,
         "answer": reAns
     };
     if (Number(Type) === 5) {
