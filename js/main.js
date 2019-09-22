@@ -124,7 +124,7 @@ $.ajax({
         console.log(res);
         Type = res[1];          //已做题目类型
         if (Type == 6) {         //答题已结束
-            window.location.href = "end.html";
+            window.location.href = "end.php";
         }
         GetContents(res);    //已做题目数量
 
@@ -251,7 +251,7 @@ function Next() {
         if (Number(m_num) + Number(nowNum) == allNum - 1) {
             clearInterval(t);
             alert("答题结束");
-            window.location.href = 'end.html';
+            window.location.href = 'end.php';
         } else {
             problems = problems_temp;
             Type = Number(Type) + 1;

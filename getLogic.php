@@ -23,17 +23,17 @@ $sql = "SELECT * FROM logic WHERE num='$paper_id'";
 $result = $link->query($sql);
 $logicSelectArray = Array();
 if ($result->num_rows > 0) {
-    $logicSelect = new LogicSelect();
     // 输出每行数据
     while ($row = $result->fetch_assoc()) {
+        $logicSelect = new LogicSelect();
         $logicSelect->id = $row['id'];
         $logicSelect->content = $row['content'];
         $logicSelect->A = $row['a'];
         $logicSelect->B = $row['b'];
         $logicSelect->C = $row['c'];
         $logicSelect->D = $row['d'];
+        array_push($logicSelectArray, $logicSelect);
     }
-    array_push($logicSelectArray, $logicSelect);
 }
 $link->close();
 //response
