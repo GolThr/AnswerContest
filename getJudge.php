@@ -1,6 +1,6 @@
 <?php
 include("dbConfig.php");
-
+header('Content-Type: application/json; charset=utf-8');
 class Judge{
     public $id;
     public $content;
@@ -15,14 +15,14 @@ $exam_id = $_POST['exam_id'];
 $paper_id = substr($exam_id, 5, 1);
 
 //mysql
-$sql="SELECT * FROM judge WHERE j_num='$paper_id'";
+$sql="SELECT * FROM judge WHERE num='$paper_id'";
 $result = $link -> query($sql);
 $judgeArray = Array();
 if ($result -> num_rows > 0) {
     // 输出每行数据
     while($row = $result -> fetch_assoc()) {
         $judge = new Judge();
-        $judge -> id = $row['judge_id'];
+        $judge -> id = $row['id'];
         $judge -> content = $row['content'];
         array_push($judgeArray, $judge);
     }

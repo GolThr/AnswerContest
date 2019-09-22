@@ -4,9 +4,10 @@ header('Content-Type: application/json; charset=utf-8');
 
 //20191124
 $exam_id = $_POST['exam_id'];
-$q_num = intval($exam_id[4]);//字符
+$paper_id = substr($exam_id, 5, 1);
 class Date{
 //    public $quick_response_id;
+    public $id;
     public $content;
     public $A;
     public $B;
@@ -14,13 +15,14 @@ class Date{
     public $D;
     public $E;
 }
-$sql = "SELECT * from quick_response where q_num = $q_num";
+$sql = "SELECT * from quick_response where q_num = $paper_id";
 $result = $link -> query($sql);
 $data =array();
 if ($result -> num_rows > 0) {
     while($row = $result -> fetch_assoc()) {
 //        $date -> quick_response_id = $row['quick_response_id'];
         $date = new Date();
+        $date -> id = $row['id'];
         $date -> content = $row['q_content'];
         $date -> A = $row['q_reminder1'];
         $date -> B = $row['q_reminder2'];

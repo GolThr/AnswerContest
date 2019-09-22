@@ -1,5 +1,6 @@
 <?php
 include("dbConfig.php");
+header('Content-Type: application/json; charset=utf-8');
 
 class SingleSelect{
     public $id;
@@ -17,21 +18,22 @@ $exam_id = $_POST['exam_id'];
 $paper_id = substr($exam_id, 5, 1);
 
 //mysql
-$sql="SELECT * FROM single_select WHERE s_num='$paper_id'";
+$sql="SELECT * FROM single_select WHERE num='$paper_id'";
 $result = $link -> query($sql);
 $singleSelectArray = Array();
 if ($result -> num_rows > 0) {
-    $singleSelect = new SingleSelect();
     // 输出每行数据
     while($row = $result -> fetch_assoc()) {
-        $singleSelect -> id = $row['single_select_id'];
+        $singleSelect = new SingleSelect();
+        $singleSelect -> id = $row['id'];
         $singleSelect -> content = $row['content'];
-        $singleSelect -> A = $row['s_a'];
-        $singleSelect -> B = $row['s_b'];
-        $singleSelect -> C = $row['s_c'];
-        $singleSelect -> D = $row['s_d'];
+        $singleSelect -> A = $row['a'];
+        $singleSelect -> B = $row['b'];
+        $singleSelect -> C = $row['c'];
+        $singleSelect -> D = $row['d'];
+        array_push($singleSelectArray, $singleSelect);
     }
-    array_push($singleSelectArray, $singleSelect);
+
 }
 $link -> close();
 

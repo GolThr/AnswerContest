@@ -39,11 +39,11 @@ function ShowProblem() {
     if (Ans != null) {
         Ans = JSON.parse(Ans);
         let len_Ans = Object.keys(Ans).length;
-        console.log(len_Ans);
-        if (len_Ans - 1 < maxNum) {
-            console.log("有做题记录");
-            nowNum = len_Ans - 1;
-        }
+        console.log("已做题目数量:"+len_Ans);
+        // if (len_Ans - 1 < maxNum) {
+        //     console.log("有做题记录");
+        //     nowNum = len_Ans - 1;
+        // }
     }
 
     let NO = Number(m_num) + Number(nowNum) + 1; //计算当前题目标号
@@ -54,17 +54,24 @@ function ShowProblem() {
     let contents = '';
     let ans = ['A', 'B', 'C', 'D', 'E', 'F'];
     let hint = ['提示一', '提示二', '提示三', '提示四', '提示五'];
+    let judge = ['√','×'];
 
-
-    for (i in problems[nowNum]) { // 循环显示选项
-        if (i !== 'content') {
-            if (Number(Type) % 2 === 0 && Number(Type) < 5) {
-                contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='radio' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
-            } else if (Number(Type) % 2 !== 0 && Number(Type) < 5) {
-                contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='checkbox' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
-            } else {    //多段式
-                contents += "<p>" + hint[now_cnt] + ":" + problems[nowNum][i] + "</p>";
+    if (Type != 2) {
+        for (i in problems[nowNum]) { // 循环显示选项
+            if (i !== 'content' && i != 'id') {
+                if (Number(Type) % 2 === 0 && Number(Type) < 5) {
+                    contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='radio' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
+                } else if (Number(Type) % 2 !== 0 && Number(Type) < 5) {
+                    contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='checkbox' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
+                } else {    //多段式
+                    contents += "<p>" + hint[now_cnt] + ":" + problems[nowNum][i] + "</p>";
+                }
+                now_cnt = now_cnt + 1;
             }
+        }
+    } else {
+        for (let i = 0; i < 2; i++){
+            contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='radio' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + judge[i] + "</span></div>";
             now_cnt = now_cnt + 1;
         }
     }
@@ -81,7 +88,7 @@ function ShowProblem() {
     $("#pg_b").html(NO + "/" + allNum);
 
     // 提前请求下一题型的题目信息
-    if (nowNum == maxNum-1){
+    if (nowNum == maxNum-1 && Type < 5){
         asynGetContents();
     }
 }
@@ -158,6 +165,7 @@ function UpAns() {
             }
         }
     }
+    console.log("当前模块已做题目记录")
     console.log(now_Ans);
     let UpUrl = ['submit.php', 'quickResponseSubmit.php'];
     if (Type != 5) {
@@ -168,7 +176,12 @@ function UpAns() {
     $.ajax({
         url: UpUrl,
         type: "POST",
-        data: now_Ans,
+        data: {
+            0: {
+                'exam_id':userInfo
+            },
+            1: now_Ans,
+        },
         success: function (res) {
             console.log(res);
         },
@@ -184,6 +197,7 @@ function UpAns() {
 function Next() {
     endTime = new Date().getTime();
     let Time = endTime - startTime;
+    console.log("做题时间:");
     console.log(Time);
 
     allAns = getCookie("Ans");      // 读取做过的题目信息
@@ -229,7 +243,7 @@ function Next() {
     document.cookie = "clock=" + num;
 
     if (nowNum < maxNum - 1) {
-        nowNum += 1;
+        nowNum = nowNum + 1;
         ShowProblem();
     } else {
         UpAns();                    //上传答案
