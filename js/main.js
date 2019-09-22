@@ -1,5 +1,5 @@
 const userInfo = getCookie('exam_id');  //考生id信息
-if (!userInfo){
+if (!userInfo) {
     window.location.href = 'index.html';
 }
 const URLs = ['getSglSlct.php', 'getMultiSlct.php', 'getJudge.php', 'getRelated.php', 'getLogic.php', 'getQuickResponse.php']; //题目请求地址
@@ -17,6 +17,7 @@ let endTime;        //答题结束时间
 let updateAns = {};   //用户所有答案
 let now_Ans = {};
 let Infos = {};       //提交数据
+let now_problem_id = {}; // 当前题型题目id
 Infos[0] = {"exam_id": userInfo};
 
 let allAns = getCookie("Ans");
@@ -32,14 +33,13 @@ function AddProblems(pro) {
 // 显示当前题目信息
 function ShowProblem() {
     $('#Type').html(ShowType[Type]);
-
     let now_cnt = 0;
 
     let Ans = getCookie("Ans");
     if (Ans != null) {
         Ans = JSON.parse(Ans);
         let len_Ans = Object.keys(Ans).length;
-        console.log("已做题目数量:"+len_Ans);
+        console.log("已做题目数量:" + len_Ans);
         // if (len_Ans - 1 < maxNum) {
         //     console.log("有做题记录");
         //     nowNum = len_Ans - 1;
@@ -54,27 +54,26 @@ function ShowProblem() {
     let contents = '';
     let ans = ['A', 'B', 'C', 'D', 'E', 'F'];
     let hint = ['提示一', '提示二', '提示三', '提示四', '提示五'];
-    let judge = ['√','×'];
+    let judge = ['√', '×'];
 
-    if (Type != 2) {
-        for (i in problems[nowNum]) { // 循环显示选项
-            if (i !== 'content' && i != 'id') {
-                if (Number(Type) % 2 === 0 && Number(Type) < 5) {
-                    contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='radio' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
-                } else if (Number(Type) % 2 !== 0 && Number(Type) < 5) {
-                    contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='checkbox' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
-                } else {    //多段式
-                    contents += "<p>" + hint[now_cnt] + ":" + problems[nowNum][i] + "</p>";
-                }
-                now_cnt = now_cnt + 1;
+
+    for (i in problems[nowNum]) { // 循环显示选项
+        if (i === 'id'){
+            now_problem_id[nowNum] = problems[nowNum][i];
+            console.log("now_problem_id:");
+            console.log(now_problem_id);
+        } else if (i !== 'content') {
+            if (Number(Type) % 2 === 0 && Number(Type) < 5) {
+                contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='radio' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
+            } else if (Number(Type) % 2 !== 0 && Number(Type) < 5) {
+                contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='checkbox' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
+            } else {    //多段式
+                contents += "<p>" + hint[now_cnt] + ":" + problems[nowNum][i] + "</p>";
             }
-        }
-    } else {
-        for (let i = 0; i < 2; i++){
-            contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='radio' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + judge[i] + "</span></div>";
             now_cnt = now_cnt + 1;
         }
     }
+
     if (Number(Type) === 5) {
         contents += "你的答案: <input type='text' name='ans'>";
         startTime = new Date().getTime();
@@ -88,7 +87,7 @@ function ShowProblem() {
     $("#pg_b").html(NO + "/" + allNum);
 
     // 提前请求下一题型的题目信息
-    if (nowNum == maxNum-1 && Type < 5){
+    if (nowNum == maxNum - 1 && Type < 5) {
         asynGetContents();
     }
 }
@@ -158,8 +157,8 @@ function UpAns() {
     if (allAns) {
         updateAns = JSON.parse(allAns);
         let tempCount = 0;
-        for (let key in updateAns){
-            if (key >= m_num && key <= Number(m_num)+Number(maxNum)){
+        for (let key in updateAns) {
+            if (key >= m_num && key <= Number(m_num) + Number(maxNum)) {
                 now_Ans[tempCount] = updateAns[key];
                 tempCount++;
             }
@@ -178,7 +177,7 @@ function UpAns() {
         type: "POST",
         data: {
             0: {
-                'exam_id':userInfo
+                'exam_id': userInfo
             },
             1: now_Ans,
         },
@@ -223,7 +222,7 @@ function Next() {
     }
 
     let sigAns = {
-        "id": Number(m_num) + Number(nowNum),
+        "id": now_problem_id[nowNum],
         "type": Type,
         "answer": reAns
     };
@@ -247,14 +246,15 @@ function Next() {
         ShowProblem();
     } else {
         UpAns();                    //上传答案
+        now_problem_id = {};    // 清空上一题型的题目信息
         //delCookie("clock");
-        if (Number(m_num)+Number(nowNum) == allNum-1){
+        if (Number(m_num) + Number(nowNum) == allNum - 1) {
             clearInterval(t);
             alert("答题结束");
             window.location.href = 'end.html';
         } else {
             problems = problems_temp;
-            Type = Number(Type)+1;
+            Type = Number(Type) + 1;
             m_num = Number(m_num) + Number(maxNum);
             nowNum = 0;
             maxNum = problems.length;
@@ -263,8 +263,8 @@ function Next() {
     }
 }
 
-function asynGetContents(){
-    let URL = URLs[Number(Type)+1];
+function asynGetContents() {
+    let URL = URLs[Number(Type) + 1];
     $.ajax({
         url: URL,
         type: "post",
