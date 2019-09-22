@@ -1,41 +1,43 @@
 <?php
     //用于提交多段式题目
+var_dump($_POST);
     include("dbConfig.php");
-    var_dump($_POST);
-    //所以提交过来的数据是啥？？？
-    $answer = json_decode($_POST[''], true);
-    $count = count($answer);
-    $exam_id = $answer[0]['exam_id'];
-    $sql = "SELECT * FROM student WHERE exam_id='$exam_id'";
-    $result = $link->query($sql);
-//    $question_type = ['single_select', 'multi_select', 'judge', 'related', 'logic', 'quick_response'];
-    if ($result->num_rows > 0) {   //查询是否存在该考生
-        for ($i = 1; $i < $count; $i++) {
-            $id = $answer[$i]['id'];
-            $type = $answer[$i]['type'];
-            $answer1 = $answer[$i]['answer'];
 
-            $other_sql = "SELECT * from quick_response where id = $id";
-            $result = $link -> query($other_sql);
-            $question_detail=mysqli_fetch_array($result,MYSQLI_ASSOC);
-
-            if($answer == $question_detail['q_ans']){
-                $score = $question_detail['q_sco'];
-                $sql="UPDATE student SET score = score + $score where exam_id = '$exam_id'";
-                $result = $link -> query($sql);
-            }
+    class Qr{
+        public $id;
+        public $answer;
+        public $duration;
+        public function __construct($i, $a, $d){
+            $this->id = $i;
+            $this->answer = $a;
+            $this->duration = $d;
         }
-    } else {
-        echo "<script>alert('身份错误！')<script>";
     }
 
-//else if($type == 5){
-//            $other_sql = "SELECT * from $question_type[$type] where id = $id";
-//            $result = $link -> query($other_sql);
-//            $question_detail=mysqli_fetch_array($result,MYSQLI_ASSOC);
-//            if($answer == $question_detail['ans']){
-//                $score = $question_detail['score'];
-//                $sql="UPDATE student SET score = score + $score where exam_id = $exam_id";
-//                $result = $link -> query($sql);
-//            }
-//}
+    //read_post_data
+    $exam_id = $_POST[0]['exam_id'];
+    //$exam_id = '20191124';
+
+    //20191124
+    $paper_id = substr($exam_id, 5, 1);
+
+    $question_num = 2;
+    //mysql
+    for($i = 1; $i <= $question_num; $i++){
+        $qr = new Qr($_POST[1][$i-1]['id'], $_POST[1][$i-1]['answer'], $_POST[1][$i-1]['duration']);
+        //$qr = new Qr('1', '宪法是国家的根本法', '123');
+        $sql="SELECT * FROM quick_response WHERE q_num='$paper_id' AND id='$qr->id'";
+        $result = $link -> query($sql);
+        if ($result -> num_rows > 0) {
+            // 输出每行数据
+            while($row = $result -> fetch_assoc()) {
+                if($qr->answer == $row['q_ans']){
+                    $update_sql="UPDATE student SET qr".$i."_dura = '$qr->duration' where exam_id = '$exam_id'";
+                    $update_result = $link -> query($update_sql);
+                }
+            }
+        }
+    }
+    $link -> close();
+
+    //response

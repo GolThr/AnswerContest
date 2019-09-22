@@ -55,7 +55,7 @@ function ShowProblem() {
     let ans = ['A', 'B', 'C', 'D', 'E', 'F'];
     let hint = ['提示一', '提示二', '提示三', '提示四', '提示五'];
     let judge = ['√', '×'];
-
+    let Cnt = 1;
 
     for (i in problems[nowNum]) { // 循环显示选项
         if (i === 'id'){
@@ -68,7 +68,9 @@ function ShowProblem() {
             } else if (Number(Type) % 2 !== 0 && Number(Type) < 5) {
                 contents += "<div>" + ans[now_cnt] + ".<input id='" + ans[now_cnt] + "' type='checkbox' name='ans' value=" + ans[now_cnt] + ">" + "<label for='" + ans[now_cnt] + "'></label><span>" + problems[nowNum][i] + "</span></div>";
             } else {    //多段式
-                contents += "<p>" + hint[now_cnt] + ":" + problems[nowNum][i] + "</p>";
+                let T = Cnt*6000;
+                Cnt++;
+                contents = contents + "<p id='hint_"+i+"' style='display: none'>" + hint[now_cnt] + ":" + problems[nowNum][i] + "</p><script> setTimeout(function(){document.getElementById('hint_"+i+"').style.display='block';}, "+T+");</script>";
             }
             now_cnt = now_cnt + 1;
         }
@@ -179,7 +181,7 @@ function UpAns() {
             0: {
                 'exam_id': userInfo
             },
-            1: now_Ans,
+            1: now_Ans
         },
         success: function (res) {
             console.log(res);
@@ -247,11 +249,12 @@ function Next() {
     } else {
         UpAns();                    //上传答案
         now_problem_id = {};    // 清空上一题型的题目信息
+        now_Ans = {};
         //delCookie("clock");
         if (Number(m_num) + Number(nowNum) == allNum - 1) {
             clearInterval(t);
             alert("答题结束");
-            window.location.href = 'end.html';
+            //window.location.href = 'end.html';
         } else {
             problems = problems_temp;
             Type = Number(Type) + 1;

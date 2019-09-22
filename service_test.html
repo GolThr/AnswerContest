@@ -8,11 +8,12 @@
 <body>
 
     <script type="text/javascript">
-        var data = {exam_id:"20191134"};
+        var data = '[{"exam_id":"20191134"},{"id":"1","answer":"宪法是国家的根本法","duration":"123"},{"id":"2","answer":"宪法是国家的根本法","duration":"12"}]';
+        console.log(JSON.parse(data));
         console.log("Ajax: ");
         $.ajax({
-            url: "getRelated.php", //后台请求数据
-            data: data,
+            url: "quickResponseSubmit.php", //后台请求数据
+            data: JSON.parse(data),
             dataType: 'json',
             type: 'post',
             success: function (msg) {
