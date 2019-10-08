@@ -2,6 +2,15 @@ const userInfo = getCookie('exam_id');  //考生id信息
 if (!userInfo) {
     window.location.href = 'index.html';
 }
+$(document).bind("contextmenu", function () { return false; });//禁止右键
+document.oncontextmenu = function () { return false; };
+document.onkeydown = function () {
+    if (window.event && window.event.keyCode == 123) {
+        event.keyCode = 0;
+        event.returnValue = false;
+        return false;
+    }
+};//禁止F12
 const URLs = ['getSglSlct.php', 'getMultiSlct.php', 'getJudge.php', 'getRelated.php', 'getLogic.php', 'getQuickResponse.php']; //题目请求地址
 const ShowType = ['一、单选题', '二、多选题', '三、判断题', '四、关联题', '五、逻辑题', '六、多段式'];
 
@@ -11,27 +20,35 @@ let m_num = 0;      //其他模块已做题目数量
 let Type;           //当前已做模块
 let nowNum = 0;     //当前模块已答题数量
 let maxNum;         //当前模块已接受题目数量
-let allNum;         //所有题目数量
+let allNum = 80;         //所有题目数量
 let startTime;      //答题开始时间
 let endTime;        //答题结束时间
 let updateAns = {};   //用户所有答案
 let now_Ans = {};
 let Infos = {};       //提交数据
 let now_problem_id = {}; // 当前题型题目id
-Infos[0] = {"exam_id": userInfo};
 
 let allAns = getCookie("Ans");
+let A_Temp = JSON.parse(allAns);
+for (let temp in A_Temp){
+    Infos[nowNum++] = A_Temp[temp];
+}
+if (nowNum >= allNum){
+    window.location.href='end.php';
+}
 
 // 回调函数，调用接受的题目数据
 function AddProblems(pro) {
     problems = pro;
     maxNum = problems.length;
-
     ShowProblem();
 }
 
 // 显示当前题目信息
 function ShowProblem() {
+    if (nowNum < 0) {
+        window.location.href = 'end.php';
+    }
     $('#Type').html(ShowType[Type]);
     let now_cnt = 0;
 
@@ -40,10 +57,6 @@ function ShowProblem() {
         Ans = JSON.parse(Ans);
         let len_Ans = Object.keys(Ans).length;
         console.log("已做题目数量:" + len_Ans);
-        // if (len_Ans - 1 < maxNum) {
-        //     console.log("有做题记录");
-        //     nowNum = len_Ans - 1;
-        // }
     }
 
     let NO = Number(m_num) + Number(nowNum) + 1; //计算当前题目标号
@@ -54,7 +67,6 @@ function ShowProblem() {
     let contents = '';
     let ans = ['A', 'B', 'C', 'D', 'E', 'F'];
     let hint = ['提示一', '提示二', '提示三', '提示四', '提示五'];
-    let judge = ['√', '×'];
     let Cnt = 1;
 
     for (i in problems[nowNum]) { // 循环显示选项
@@ -97,8 +109,9 @@ function ShowProblem() {
 // 异步请求获取题目信息
 function GetContents(Num) {
     m_num = Num[0];
+    nowNum -= m_num;
     let URL = URLs[Num[1]];
-    allNum = Num[2];
+    // allNum = Num[2];
 
     $.ajax({
         url: URL,
@@ -126,10 +139,9 @@ $.ajax({
         console.log(res);
         Type = res[1];          //已做题目类型
         if (Type == 6) {         //答题已结束
-            window.location.href = "end.html";
+            window.location.href = "end.php";
         }
         GetContents(res);    //已做题目数量
-
     }
 });
 
@@ -254,7 +266,7 @@ function Next() {
         if (Number(m_num) + Number(nowNum) == allNum - 1) {
             clearInterval(t);
             alert("答题结束");
-            //window.location.href = 'end.html';
+            window.location.href = "end.php";
         } else {
             problems = problems_temp;
             Type = Number(Type) + 1;

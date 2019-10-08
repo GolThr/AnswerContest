@@ -1,6 +1,6 @@
 <?php
 include("service/dbConfig.php");
-
+session_start();
 class User{
     public $ifsuccess = '0';
     public $exam_id;
@@ -24,6 +24,7 @@ if ($result -> num_rows > 0) {
     // 输出每行数据
     while($row = $result -> fetch_assoc()) {
         $user -> exam_id = $row['exam_id'];
+        $_SESSION['exam_id'] = $user->exam_id;
         $user -> name = $row['name'];
         $user -> school = $row['school'];
         $user -> region = $row['region'];

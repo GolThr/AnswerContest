@@ -1,12 +1,15 @@
 <?php
 include("dbConfig.php");
 //header('Content-Type: application/json; charset=utf-8');
-$exam_id = $_GET['exam_id'];
-$sql="SELECT score FROM student where exam_id = '$exam_id'";
-$result=$link->query($sql);
+session_start();
+if (!isset($_SESSION['exam_id'])) {
+    header('Location: index.html');
+}
+$exam_id = $_SESSION['exam_id'];
+$sql = "SELECT score FROM student where exam_id = '$exam_id'";
+$result = $link->query($sql);
 
-$score=mysqli_fetch_array($result,MYSQLI_ASSOC);
-var_dump( $score);
+$score = mysqli_fetch_array($result, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +19,6 @@ var_dump( $score);
 </head>
 <body>
 <h1>考试已结束</h1>
-<h2>你目前客观题分数为：<?php echo $score['score']; ?></h2>
 <h2>具体分数还请成绩公布之后查询！</h2>
 </body>
 </html>

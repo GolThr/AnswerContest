@@ -28,9 +28,11 @@ var_dump($_POST);
         //$qr = new Qr('1', '宪法是国家的根本法', '123');
         $sql="SELECT * FROM quick_response WHERE q_num='$paper_id' AND id='$qr->id'";
         $result = $link -> query($sql);
+        var_dump($result);
         if ($result -> num_rows > 0) {
             // 输出每行数据
             while($row = $result -> fetch_assoc()) {
+                var_dump($row);
                 if($qr->answer == $row['q_ans']){
                     $update_sql="UPDATE student SET qr".$i."_dura = '$qr->duration' where exam_id = '$exam_id'";
                     $update_result = $link -> query($update_sql);

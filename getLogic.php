@@ -2,8 +2,7 @@
 include("dbConfig.php");
 header('Content-Type: application/json; charset=utf-8');
 
-class LogicSelect
-{
+class LogicSelect{
     public $id;
     public $content;
     public $A;
