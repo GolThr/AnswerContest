@@ -118,7 +118,7 @@ body {
 .login-form {
     background:white;
     width: 400px;
-    left:0px;
+    left: 0px;
     border-radius: 30px;
     position: absolute;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -129,7 +129,7 @@ body {
     background: white;
     border-radius: 30px;
     position: absolute;
-    left:30%;
+    left:35%;
     width: 600px;
     padding: 40px 25px 40px 25px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -143,8 +143,8 @@ h2 {
     text-align: center;
 }
 .main {
+    margin-left: 13%;
     position: relative;
-    left:15%;
     top:50px;
 }
 img{
