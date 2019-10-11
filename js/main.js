@@ -46,9 +46,14 @@ function AddProblems(pro) {
 
 // 显示当前题目信息
 function ShowProblem() {
+    if (Number(nowNum)+Number(m_num)+1 == allNum){
+        let btn = document.getElementsByTagName("Button");
+        btn[0].innerHTML = "交卷";
+    }
     if (nowNum < 0) {
         window.location.href = 'end.php';
     }
+
     $('#Type').html(ShowType[Type]);
     let now_cnt = 0;
 
@@ -251,7 +256,8 @@ function Next() {
     document.cookie = "Ans=" + ansString; //做题记录写入本地Cookie
 
     // 更新计时器
-    if (Type < 3) num = 30;
+    if (Type == 0) num = 30;
+    else if (Type == 2) num = 15;
     else num = 60;
     document.cookie = "clock=" + num;
 
@@ -270,6 +276,11 @@ function Next() {
         } else {
             problems = problems_temp;
             Type = Number(Type) + 1;
+            // 更新计时器
+            if (Type == 0) num = 30;
+            else if (Type == 2) num = 15;
+            else num = 60;
+            document.cookie = "clock=" + num;
             m_num = Number(m_num) + Number(maxNum);
             nowNum = 0;
             maxNum = problems.length;
